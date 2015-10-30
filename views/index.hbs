@@ -3,6 +3,7 @@
 	<head>
 	<title>Expenses Calculator by Albert Huynh</title>
 		<meta charset="utf-8">
+		<script src="javascripts/jquery-2.1.4.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js"></script>
 		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.19.min.js"></script>
 		<!-- Latest compiled and minified CSS -->
@@ -24,7 +25,7 @@
 				<div class="col-md-6">
 					<div class="well">
 						<div class="form-group">
-							<h4>Add an expense</h4>
+							<h4><b>Add an expense</b></h4>
 						</div>
 						<div class="form-group">
 							<label for="expense">Expense</label>
@@ -85,7 +86,7 @@
 						</div>
 
 						<div class="form-group">
-							<button class="btn btn-primary" id="filtered_total_btn">Calcaulate</button>
+							<button class="btn btn-primary" id="filtered_total_btn">Calculate</button>
 						</div>
 
 						<div class="form-group">
@@ -100,26 +101,13 @@
 				<div class="col-md-12">
 					<div class="well">
 							<h2>Expenses</h2>
-							<div id="displayHere"></div>
-							<br>
-
-
-							<div id="displayCategoryTotal"></div>
-							<br> 
-
-							<button id="save">Save List</button>
-
+							<div id="displayAllExpenses"></div>
+							<button class="btn btn-default" id="save">Save List</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-
-	
-
-
-	<div id="filtered"></div>
-	<br>
 	<script src="javascripts/albertunderscore.js"></script>
 	<script src="javascripts/expense.js"></script>
 	</body>

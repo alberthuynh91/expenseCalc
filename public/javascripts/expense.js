@@ -1,13 +1,17 @@
 Parse.initialize('sLmqqQCFp6VRZT3j11MlJGNAiHLR1iSv89n8YAvu', '9lebCJboDYWAnhwAv6gWFG8x2PeSOhULoujYZWpo');
 
+
+// Returns the expense list from localStorage
 function get_expenses() {
 	return JSON.parse(localStorage.getItem('expenselist')) || [];
 }
 
+// Function to set the list to localStorage
 function set_expenses(expenses){
 	localStorage.setItem('expenselist', JSON.stringify(expenses));
 }
 
+// Adds an expense to the expense list (localStorage)
 function add() {
 	var expense = { Expense: document.getElementById('expense').value,
 		Cost: parseInt(document.getElementById('cost').value),
@@ -22,28 +26,6 @@ function add() {
 }
 
 
-function display() {
-	var expenses = get_expenses();
-	var html = '<ol>';
-
-	each(expenses, function(expense, index) {
-		html += '<li>' + "Expense: " + expense.Expense + 
-		"<br>Cost: $" + expense.Cost + 
-		"<br>Category: " + expense.Category + 
-		"<br>Date: " + expense.ExpenseDate + '<br><button class="remove btn btn-danger" id="' +
-		index + '">Remove</button></li>';
-	});
-	html += '</ol>';
-
-	document.getElementById('displayHere').innerHTML = html;
-	var buttons = document.getElementsByClassName('remove');
-
-	each(buttons, function(button) {
-		button.addEventListener('click', remove);
-	});
-}
-
-// Remove Function
 //	Removes expense from list of expenses
 function remove() {
 	var id = this.getAttribute('id');
@@ -51,6 +33,31 @@ function remove() {
 	expenses.splice(id, 1);
 	localStorage.setItem('expenselist', JSON.stringify(expenses));
 	display();
+}
+
+
+// Displays ALL expenses
+function display() {
+	var expenses = get_expenses();
+	var html = '<table class="table table-hover">'
+
+	each(expenses, function(expense, index) {
+		html += '<tr>';
+		html += '<td>' + expense.Expense + '</td>' +
+		'<td>Cost: $' + expense.Cost + '</td>' +
+		'<td>Category: ' + expense.Category + '</td>' +
+		'<td>Date: ' + expense.ExpenseDate + '</td>' + 
+		'<td><button class="remove btn btn-danger" id="' + index + '">Remove</button></td>';
+		html += '</tr>';
+	});
+	html += '</table>';
+
+	document.getElementById('displayAllExpenses').innerHTML = html;
+	var buttons = document.getElementsByClassName('remove');
+
+	each(buttons, function(button) {
+		button.addEventListener('click', remove);
+	});
 }
 
 
@@ -102,58 +109,7 @@ function filteredTotal() {
 }
 
 
-function calcCategory() {
-	var selected_category = document.getElementById('categoryForTotal').value;
-	var expenses = get_expenses();
-	var category_total = 0;
-	for (var j = 0; j < expenses.length; j++) {
-		if (expenses[j].Category == selected_category) {
-			category_total += expenses[j].Cost;
-		}
-	}
-	console.log("calculating category total");
-	var displayCategoryTotal = "Total spent on "  + selected_category + " is: " + category_total;
-	document.getElementById('displayCategoryTotal').innerHTML = displayCategoryTotal;
-}
-
-function calcDate() {
-	var expenses = get_expenses();
-	var dateTotal = 0;
-	var fromDate = document.getElementById('fromDate').value;
-	var toDate = document.getElementById('toDate').value
-	if (fromDate === '') {
-		alert("Please choose a start date");
-	} else if (toDate === '') {
-		alert("Please choose a end date")
-	} else {
-		for (var i = 0; i < expenses.length; i++) {
-			if(expenses[i].ExpenseDate >= fromDate && expenses[i].ExpenseDate <= toDate) {
-				dateTotal += expenses[i].Cost;
-			}
-		}
-	}
-
-	console.log("calculating total from date range");
-	var displayDateTotal = "Total spent from " + fromDate + " to " + toDate + " is: " + dateTotal;
-	document.getElementById('displayCategoryTotal').innerHTML = displayDateTotal;
-
-	var html = '<ol>';
-	for (var j = 0; j < expenses.length; j++) {
-		if (expenses[j].ExpenseDate >= fromDate && expenses[j].ExpenseDate <= toDate) {
-			html += '<li>' + "Expense: " + expenses[j].Expense + 
-		"<br>Cost: $" + expenses[j].Cost + 
-		"<br>Category: " + expenses[j].Category + 
-		"<br>Date: " + expenses[j].ExpenseDate + '<button class="remove btn btn-danger" id="' +
-		i + '">x</button></li>';
-		}
-	}
-		
-	html += '</ol>';
-
-	// Display the entire expenses in the 'displayHere' div element 
-	document.getElementById('filtered').innerHTML = html;
-}
-
+// Saves the expense list and writes it out to Parse
 function saveToParse() {
 	var expenses = get_expenses();
 	var ExpenseList = Parse.Object.extend("ExpenseList");
@@ -161,21 +117,24 @@ function saveToParse() {
 	expenseList.set('expenses', JSON.stringify(expenses));
 	expenseList.save(null, {
 		success: function() { 
-			console.log("success")
+			alert("List was successfully saved");
+			console.log("Sucesss: File saved to Parse")
 		}, 
 		error: function() {
-			console.log("error");
+			alert("ERROR: Unable to save file");
+			console.log("Error: Unable to save to Parse");
 		}
 	});
-	console.log("saving");
-
 }
 
+
+// Event listeners for buttons on HTML page
 document.getElementById('add').addEventListener('click', add);
 document.getElementById('total_btn').addEventListener('click', entireTotal);
 document.getElementById('save').addEventListener('click', saveToParse);
 document.getElementById('filtered_total_btn').addEventListener('click', filteredTotal);
+
+
+// Display expenses
 display();
-
-
 
