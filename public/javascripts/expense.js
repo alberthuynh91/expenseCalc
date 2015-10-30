@@ -41,12 +41,12 @@ function display() {
 	var expenses = get_expenses();
 	var html = '<table class="table table-hover">'
 
-	each(expenses, function(expense, index) {
+	forEach(expenses, function(expense, index) {
 		html += '<tr>';
-		html += '<td>' + expense.Expense + '</td>' +
-		'<td>Cost: $' + expense.Cost + '</td>' +
-		'<td>Category: ' + expense.Category + '</td>' +
-		'<td>Date: ' + expense.ExpenseDate + '</td>' + 
+		html += '<td><b>' + expense.Expense + '</b></td>' +
+		'<td><b>Cost</b>: $' + expense.Cost + '</td>' +
+		'<td><b>Category</b>: ' + expense.Category + '</td>' +
+		'<td><b>Date</b>: ' + expense.ExpenseDate + '</td>' + 
 		'<td><button class="remove btn btn-danger" id="' + index + '">Remove</button></td>';
 		html += '</tr>';
 	});
@@ -55,7 +55,7 @@ function display() {
 	document.getElementById('displayAllExpenses').innerHTML = html;
 	var buttons = document.getElementsByClassName('remove');
 
-	each(buttons, function(button) {
+	forEach(buttons, function(button) {
 		button.addEventListener('click', remove);
 	});
 }
@@ -65,7 +65,7 @@ function display() {
 function entireTotal() {
 	var expenses = get_expenses();
 	var total = 0;
-	each(expenses, function(expense) {
+	forEach(expenses, function(expense) {
 		total += expense.Cost;
 	});
 
@@ -83,7 +83,7 @@ function filteredTotal() {
 	var expenses = get_expenses();
 
 	if (selected_category !== "" && fromDate !== "" && toDate !== "") {
-		each(expenses, function(expense) {
+		forEach(expenses, function(expense) {
 			if (expense.Category === selected_category && 
 				expense.ExpenseDate >= fromDate && expense.ExpenseDate <= toDate) {
 					filteredTotal += expense.Cost;
@@ -92,14 +92,14 @@ function filteredTotal() {
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " from  " +
 																													fromDate + " to " + toDate + " is</b>: $" + filteredTotal;
 	} else if (selected_category !== "" && fromDate === "" || toDate === "") {
-		each(expenses, function(expense) {
+		forEach(expenses, function(expense) {
 			if (expense.Category === selected_category) {
 				filteredTotal += expense.Cost;
 			}
 		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " is</b>: $" + filteredTotal;
 	} else if (selected_category === "" && fromDate !== "" && toDate !== "") {
-		each(expenses, function(expense) {
+		forEach(expenses, function(expense) {
 			if (expense.ExpenseDate >= fromDate && expense.ExpenseDate <= toDate) {
 				filteredTotal += expense.Cost;
 			}
