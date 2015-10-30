@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="eng">
+	<head>
+	<title>Expenses Calculator by Albert Huynh</title>
+		<meta charset="utf-8">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js"></script>
+		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.0.19.min.js"></script>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+		<script src="stylesheets/style.css"></script>
+	</head>
+
+	<body>
+		<center><h1>Welcome to the Expense Calculator</h1></center>
+
+		<div class="container">
+			<!-- Row #1 -->
+			<div class="row">
+				<!-- Left Column -->
+				<div class="col-md-6">
+					<div class="well">
+						<div class="form-group">
+							<h4>Add an expense</h4>
+						</div>
+						<div class="form-group">
+							<label for="expense">Expense</label>
+							<input type="text" class="form-control" name="expense" id="expense" placeholder="Enter short description of expense">
+						</div>
+						<div class="form-group">
+							<label for="cost">Cost</label>
+							<input type="number" class="form-control" name="cost" id="cost" placeholder="Enter cost of expense">
+						</div>
+						<div class="form-group">
+							<label for="category">Category</label> 
+							<select name="category" class="form-control" id='category'>
+									<option selected disabled hidden value=''>Select a category</option>
+									<option value="debt">Debt</option>
+									<option value="food">Food</option>
+									<option value="pet">Pet</option>
+									<option value="recreation">Recreation</option>
+									<option value="transportation">Transportation</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="date">Date</label>
+							<input type="date" class="form-control" name="expenseDate" id="expenseDate" placeholder="Enter the date of expense">
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default" id="add">Add Expense</button>
+						</div>
+					</div>
+				</div>
+				<!-- Right Column -->
+				<div class="col-md-6">
+					<div class="well">
+						<div class="form-group">
+							<h4><b>Calculate Grand Total</b></h4>
+							<button class="btn btn-primary" id="total_btn">Calculate</button>
+						</div>
+						<div class="form-group">
+							<br>
+						</div>
+						<div class="form-group">
+							<h4><b>Calcalate Total w/ Filtered Expenses</b></h4>
+							<label for="calc_category_total">By Category</label>
+							<br>
+							<select name="categoryForTotal" id='categoryForTotal'>
+										<option selected disabled hidden value=''>Select a category</option>
+										<option value=""></option>
+										<option value="debt">Debt</option>
+										<option value="food">Food</option>
+										<option value="pet">Pet</option>
+										<option value="recreation">Recreation</option>
+										<option value="transportation">Transportation</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="calc_date_total">By Date</label>
+							<br>
+							<b>From</b>: <input type="date" name="fromDate" id="fromDate"> <b>To</b>: <input type="date" name="toDate" id="toDate">
+						</div>
+
+						<div class="form-group">
+							<button class="btn btn-primary" id="filtered_total_btn">Calcaulate</button>
+						</div>
+
+						<div class="form-group">
+							<div id="displayTotal"></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- Row #2 -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="well">
+							<h2>Expenses</h2>
+							<div id="displayHere"></div>
+							<br>
+
+
+							<div id="displayCategoryTotal"></div>
+							<br> 
+
+							<button id="save">Save List</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	
+
+
+	<div id="filtered"></div>
+	<br>
+	<script src="javascripts/albertunderscore.js"></script>
+	<script src="javascripts/expense.js"></script>
+	</body>
+</html>
