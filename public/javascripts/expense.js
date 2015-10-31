@@ -1,3 +1,4 @@
+// Initialize Parse with Application ID and Javascript Key
 Parse.initialize('sLmqqQCFp6VRZT3j11MlJGNAiHLR1iSv89n8YAvu', '9lebCJboDYWAnhwAv6gWFG8x2PeSOhULoujYZWpo');
 
 
@@ -37,16 +38,26 @@ function remove() {
 
 
 // Displays ALL expenses
-function display() {
+function display(sortExpenses) {
 	var expenses = get_expenses();
+	if (sortExpenses) {
+		expenses = sortExpenses;
+	}
 	var html = '<table class="table table-hover">'
+	html += '<tr>';
+	html += '<td><b><a class="button" id="sortByExpense" href="javascript:void(0)" onclick="sort(id)">Expense</a></b></td>';
+	html += '<td><b><a class="button" id="sortByCost" href="javascript:void(0)" onclick="sort(id)">Cost</a></b></td>';
+	html += '<td><b><a class="button" id="sortByCategory" href="javascript:void(0)" onclick="sort(id)">Category</a></b></td>';
+	html += '<td><b><a class="button" id="sortByDate" href="javascript:void(0)" onClick="sort(id)">Date</a></b></td>';
+	html += '<td></td>';
+	html += '</tr>';
 
 	forEach(expenses, function(expense, index) {
 		html += '<tr>';
-		html += '<td><b>' + expense.Expense + '</b></td>' +
-		'<td><b>Cost</b>: $' + expense.Cost + '</td>' +
-		'<td><b>Category</b>: ' + expense.Category + '</td>' +
-		'<td><b>Date</b>: ' + expense.ExpenseDate + '</td>' + 
+		html += '<td>' + expense.Expense + '</td>' +
+		'<td>' + expense.Cost + '</td>' +
+		'<td>' + expense.Category + '</td>' +
+		'<td>' + expense.ExpenseDate + '</td>' + 
 		'<td><button class="remove btn btn-danger" id="' + index + '">Remove</button></td>';
 		html += '</tr>';
 	});
@@ -109,6 +120,30 @@ function filteredTotal() {
 }
 
 
+function sort(sortBy) {
+	var expenses = get_expenses();
+	if (sortBy === "sortByDate") {
+		expenses.sort(function(a, b) {
+		return new Date(a.ExpenseDate) - new Date(b.ExpenseDate);
+	});
+	} else if (sortBy === "sortByCategory") {
+		expenses.sort(function(a, b) {
+			return a.Category - b.Category;
+		});
+	} else if (sortBy === "sortByCost") {
+		expenses.sort(function(a, b) {
+			return a.Cost - b.Cost;
+		});
+	} else if (sortBy === "sortByExpense") {
+		expenses.sort(function(a, b) {
+			return a.Expense - b.Expense;
+		})
+	}
+	
+
+	display(expenses);
+}
+
 // Saves the expense list and writes it out to Parse
 function saveToParse() {
 	var expenses = get_expenses();
@@ -133,6 +168,7 @@ document.getElementById('add').addEventListener('click', add);
 document.getElementById('total_btn').addEventListener('click', entireTotal);
 document.getElementById('save').addEventListener('click', saveToParse);
 document.getElementById('filtered_total_btn').addEventListener('click', filteredTotal);
+document.getElementById('sort').addEventListener('click', sort);
 
 
 // Display expenses
