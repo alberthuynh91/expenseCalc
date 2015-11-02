@@ -22,6 +22,14 @@ function filter(array, callback) {
 	return filtered;
 }
 
-function reduce(array, callback) {
-	
+function reduce(array, callback, initialValue) {
+	var prev = initialValue;
+	forEach(array, function(item) {
+		if(prev === undefined) {
+			prev = item;
+		} else {
+			prev = callback(prev, item);
+		}
+	});
+	return prev;
 }

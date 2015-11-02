@@ -1,6 +1,6 @@
 // Initialize Parse with Application ID and Javascript Key
 Parse.initialize('sLmqqQCFp6VRZT3j11MlJGNAiHLR1iSv89n8YAvu', '9lebCJboDYWAnhwAv6gWFG8x2PeSOhULoujYZWpo');
-
+var ascending = false;
 
 // Returns the expense list from localStorage
 function get_expenses() {
@@ -55,7 +55,7 @@ function display(sortExpenses) {
 	forEach(expenses, function(expense, index) {
 		html += '<tr>';
 		html += '<td>' + expense.Expense + '</td>' +
-		'<td>' + expense.Cost + '</td>' +
+		'<td>$' + expense.Cost + '</td>' +
 		'<td>' + expense.Category + '</td>' +
 		'<td>' + expense.ExpenseDate + '</td>' + 
 		'<td><button class="remove btn btn-danger" id="' + index + '">Remove</button></td>';
@@ -72,15 +72,13 @@ function display(sortExpenses) {
 }
 
 
-// Calculates total of ALL expenses in the expense list
+// entireTotal function calculates the total of ALL expenses in the expense list and displays on page
 function entireTotal() {
 	var expenses = get_expenses();
-	var total = 0;
-	forEach(expenses, function(expense) {
-		total += expense.Cost;
+	var total = reduce(expenses, function(prev, curr) {
+		return {Cost: prev.Cost + curr.Cost};
 	});
-
-	document.getElementById('displayTotal').innerHTML = "<b>Grand Total of expenses</b>: $" + total;;
+	document.getElementById('displayTotal').innerHTML = "<b>Grand Total of expenses</b>: $" + total.Cost;
 }
 
 
@@ -94,55 +92,100 @@ function filteredTotal() {
 	var expenses = get_expenses();
 
 	if (selected_category !== "" && fromDate !== "" && toDate !== "") {
+		console.log("Filter by date and category");
 		forEach(expenses, function(expense) {
 			if (expense.Category === selected_category && 
 				expense.ExpenseDate >= fromDate && expense.ExpenseDate <= toDate) {
 					filteredTotal += expense.Cost;
 			}
 		});
+		var filteredExpenseList = expenses.filter(function(expense) {
+			return expense.Category === selected_category && expense.ExpenseDate >= fromDate &&
+							expense.ExpenseDate <= toDate;
+		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " from  " +
 																													fromDate + " to " + toDate + " is</b>: $" + filteredTotal;
-	} else if (selected_category !== "" && fromDate === "" || toDate === "") {
+		display(filteredExpenseList);
+	} else if (selected_category !== "" && (fromDate === "" || toDate === "")) {
+		console.log("Filter by category");
 		forEach(expenses, function(expense) {
 			if (expense.Category === selected_category) {
 				filteredTotal += expense.Cost;
 			}
 		});
+		var filteredExpenseList = expenses.filter(function(expense) {
+			return expense.Category === selected_category;
+		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " is</b>: $" + filteredTotal;
+		display(filteredExpenseList);
 	} else if (selected_category === "" && fromDate !== "" && toDate !== "") {
+		console.log("Filter by date");
 		forEach(expenses, function(expense) {
 			if (expense.ExpenseDate >= fromDate && expense.ExpenseDate <= toDate) {
 				filteredTotal += expense.Cost;
 			}
 		});
+		var filteredExpenseList = expenses.filter(function(expense) {
+  		return expense.ExpenseDate >= fromDate && expense.ExpenseDate <= toDate;
+		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent from " + fromDate + " to " + toDate + " is</b>: $" + filteredTotal;
-	}	
+		display(filteredExpenseList);
+	} else if (selected_category === "" && fromDate == "" && toDate == "") {
+		console.log("No filter criteria");
+		document.getElementById('displayTotal').innerHTML = "";
+		display(expenses);
+	}
 }
 
 
+// Sort function
 function sort(sortBy) {
 	var expenses = get_expenses();
-	if (sortBy === "sortByDate") {
+	if (sortBy === "sortByDate" && ascending === false) {
 		expenses.sort(function(a, b) {
 		return new Date(a.ExpenseDate) - new Date(b.ExpenseDate);
-	});
-	} else if (sortBy === "sortByCategory") {
-		expenses.sort(function(a, b) {
-			return a.Category - b.Category;
 		});
-	} else if (sortBy === "sortByCost") {
+		ascending = true;
+	} else if (sortBy === "sortByDate" && ascending === true) {
+		expenses.sort(function(a, b) {
+			return new Date(b.ExpenseDate) - new Date(a.ExpenseDate);
+		});
+		ascending = false;
+	} else if (sortBy === "sortByCategory" && ascending === false) {
+		expenses.sort(function(a, b) {
+			return a.Category > b.Category;
+		});
+		ascending = true;
+	} else if (sortBy === "sortByCategory" && ascending === true) {
+		expenses.sort(function(a, b) {
+			return a.Category < b.Category;
+		});
+		ascending = false;
+	} else if (sortBy === "sortByCost" && ascending === false) {
 		expenses.sort(function(a, b) {
 			return a.Cost - b.Cost;
 		});
-	} else if (sortBy === "sortByExpense") {
+		ascending = true;
+	} else if (sortBy === "sortByCost" && ascending === true) {
 		expenses.sort(function(a, b) {
-			return a.Expense - b.Expense;
-		})
+			return b.Cost - a.Cost;
+		});
+		ascending = false;
+	} else if (sortBy === "sortByExpense" && ascending === false) {
+		expenses.sort(function(a, b) {
+			return a.Expense > b.Expense;
+		});
+		ascending = true;
+	} else if (sortBy === "sortByExpense" && ascending === true) {
+		expenses.sort(function(a, b) {
+			return a.Expense < b.Expense;
+		});
+		ascending = false;
 	}
 	
-
 	display(expenses);
 }
+
 
 // Saves the expense list and writes it out to Parse
 function saveToParse() {
@@ -168,7 +211,6 @@ document.getElementById('add').addEventListener('click', add);
 document.getElementById('total_btn').addEventListener('click', entireTotal);
 document.getElementById('save').addEventListener('click', saveToParse);
 document.getElementById('filtered_total_btn').addEventListener('click', filteredTotal);
-document.getElementById('sort').addEventListener('click', sort);
 
 
 // Display expenses
