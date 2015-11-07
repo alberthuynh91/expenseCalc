@@ -33,6 +33,7 @@ function add() {
 	var expenses = get_expenses();
 	expenses.push(expense);
 	set_expenses(expenses);
+	set_current_expenses(expenses);
 	display();
 }
 
@@ -42,6 +43,7 @@ function remove() {
 	var expenses = get_expenses();
 	expenses.splice(id, 1);
 	localStorage.setItem('expenselist', JSON.stringify(expenses));
+	set_current_expenses(expenses);
 	display();
 }
 
