@@ -187,12 +187,12 @@ function sort(sortBy) {
 		ascending = false;
 	} else if (sortBy === "sortByExpense" && ascending === false) {
 		expenses.sort(function(a, b) {
-			return a.Expense > b.Expense;
+			return a.Expense.localeCompare(b.Expense);
 		});
 		ascending = true;
 	} else if (sortBy === "sortByExpense" && ascending === true) {
 		expenses.sort(function(a, b) {
-			return a.Expense < b.Expense;
+			return b.Expense.localeCompare(a.Expense);
 		});
 		ascending = false;
 	}
