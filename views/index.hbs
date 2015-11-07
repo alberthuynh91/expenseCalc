@@ -21,25 +21,25 @@
 		<br>
 
 		<div class="container">
-			<!-- Row #1 -->
+			<!-- BEGIN: ROW #1 -->
 			<div class="row">
-				<!-- Left Column -->
-				<div class="col-md-6">
-					<div class="well">
+				<!-- BEGIN: LEFT COLUMN -->
+				<div class="col-md-3">
+					<div class="well divfixedheight">
 						<div class="form-group">
-							<h4><b>Add an expense</b></h4>
+							<div class="divTitle">Add an expense</div>
 						</div>
 						<div class="form-group">
 							<label for="expense">Expense</label>
-							<input type="text" class="form-control" name="expense" id="expense" placeholder="Enter short description of expense">
+							<input type="text" class="form-control input-sm" name="expense" id="expense" placeholder="Enter short description of expense">
 						</div>
 						<div class="form-group">
 							<label for="cost">Cost</label>
-							<input type="number" class="form-control" name="cost" id="cost" placeholder="Enter cost of expense">
+							<input type="number" class="form-control input-sm" name="cost" id="cost" placeholder="Enter cost of expense">
 						</div>
 						<div class="form-group">
 							<label for="category">Category</label> 
-							<select name="category" class="form-control" id='category'>
+							<select name="category" class="form-control input-sm" id='category'>
 									<option selected disabled hidden value=''>Select a category</option>
 									<option value="debt">Debt</option>
 									<option value="food">Food</option>
@@ -50,23 +50,23 @@
 						</div>
 						<div class="form-group">
 							<label for="date">Date</label>
-							<input type="date" class="form-control" name="expenseDate" id="expenseDate" placeholder="Enter the date of expense">
+							<input type="date" class="form-control input-sm" name="expenseDate" id="expenseDate" placeholder="Enter the date of expense">
 						</div>
 						<div class="form-group">
 							<button class="btn btn-default" id="add">Add Expense</button>
 						</div>
+					</div>
+				</div>
+				<!-- END: LEFT COLUMN -->
 
-
+				<!-- BEGIN: MIDDLE COLUMN -->
+				<div class="col-md-3">
+					<div class="well divfixedheight">
 						<div class="form-group">
-							<h4><b>Calculate Grand Total</b></h4>
-							<button class="btn btn-primary" id="total_btn">Calculate</button>
+							<div class="divTitle">Filter Expenses</div>
 						</div>
 						<div class="form-group">
-							<hr style="width: 100%; color: black; height: 1px; background-color:grey;" />
-						</div>
-						<div class="form-group">
-							<h4><b>Calcalate Total w/ Filtered Expenses</b></h4>
-							<label for="calc_category_total">By Category</label>
+							<label for="calc_category_total"><u>By Category</u></label>
 							<br>
 							<select name="categoryForTotal" id='categoryForTotal'>
 										<option selected disabled hidden value=''>Select a category</option>
@@ -79,33 +79,41 @@
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="calc_date_total">By Date</label>
+							<label for="calc_date_total"><u>By Date</u></label>
 							<br>
-							<b>From</b>: <input type="date" name="fromDate" id="fromDate"> <b>To</b>: <input type="date" name="toDate" id="toDate">
+							<table id="filterTable">
+								<tr>
+									<td><b>From</b>:</td>
+									<td></td>
+									<td><input type="date" name="fromDate" id="fromDate" class="dateDropdownResize"></td>
+								</tr>
+								<tr>
+									<td><b>To</b>:</td>
+									<td></td>
+									<td><input type="date" name="toDate" id="toDate" class="dateDropdownResize"></td>
+								</tr>
+							</table>
 						</div>
-
 						<div class="form-group">
 							<button class="btn btn-primary" id="filtered_total_btn">Calculate</button>
 						</div>
-
-						<div class="form-group">
-							<hr style="width: 100%; color: black; height: 1px; background-color:grey;" />
-							<div id="displayTotal"></div>
-						</div>
-
-
+						<div class="form-group">&nbsp;</div>
+						<div id="displayTotal"></div>
 					</div>
 				</div>
-				<!-- Right Column -->
-				<div class="col-md-6">
+				<!-- END: MIDDLE COLUMN -->
+
+				<!-- BEGIN: RIGHT COLUMN -->
+				<div class="col-md-6" id="expenseDisplay">
 					<div class="well">
 						<h2>Expenses</h2>
-							<div id="displayAllExpenses"></div>
-							<button class="btn btn-default" id="save">Save List</button>
-
+						<div id="displayAllExpenses"></div>
+						<button class="btn btn-default" id="save">Save List</button>
 					</div>
 				</div>
+				<!-- END: RIGHT COLUMN -->
 			</div>
+			<!-- END: ROW #1 -->
 		</div>
 
 	<script src="javascripts/albertsfunctions.js"></script>

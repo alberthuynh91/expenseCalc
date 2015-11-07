@@ -1,0 +1,27 @@
+#expenseDisplay {
+	overflow: scroll;
+	max-height: 580px;
+}
+
+#displayAllExpenses a:link {
+	color: #000000;
+}
+
+.divTitle {
+	color: black;
+	font-weight: bold;
+	font-size: 28px;
+}
+
+#filterTable {
+	border-spacing: 2px 5px;
+    border-collapse: separate;
+}
+
+.dateDropdownResize {
+	width: 140px;
+}
+
+.divfixedheight {
+	height: 100%;
+}

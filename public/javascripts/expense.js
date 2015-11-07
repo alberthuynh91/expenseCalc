@@ -1,15 +1,26 @@
 // Initialize Parse with Application ID and Javascript Key
 Parse.initialize('sLmqqQCFp6VRZT3j11MlJGNAiHLR1iSv89n8YAvu', '9lebCJboDYWAnhwAv6gWFG8x2PeSOhULoujYZWpo');
 var ascending = false;
+var firstLoad = true;
 
-// Returns the expense list from localStorage
+// Returns the entire expense list from localStorage
 function get_expenses() {
 	return JSON.parse(localStorage.getItem('expenselist')) || [];
+}
+
+// Returns the current expense list from localStorage
+function get_current_expenses(){
+	return JSON.parse(localStorage.getItem('currentList')) || [];
 }
 
 // Function to set the list to localStorage
 function set_expenses(expenses){
 	localStorage.setItem('expenselist', JSON.stringify(expenses));
+}
+
+// Function to set the current list to localStorage
+function set_current_expenses(filteredList){
+	localStorage.setItem('currentList', JSON.stringify(filteredList));
 }
 
 // Adds an expense to the expense list (localStorage)
@@ -19,15 +30,13 @@ function add() {
 		Category: document.getElementById('category').value,
 		ExpenseDate: document.getElementById('expenseDate').value
 	};
-
 	var expenses = get_expenses();
 	expenses.push(expense);
 	set_expenses(expenses);
 	display();
 }
 
-
-//	Removes expense from list of expenses
+// Removes expense from list of expenses
 function remove() {
 	var id = this.getAttribute('id');
 	var expenses = get_expenses();
@@ -35,7 +44,6 @@ function remove() {
 	localStorage.setItem('expenselist', JSON.stringify(expenses));
 	display();
 }
-
 
 // Displays ALL expenses
 function display(sortExpenses) {
@@ -71,7 +79,6 @@ function display(sortExpenses) {
 	});
 }
 
-
 // entireTotal function calculates the total of ALL expenses in the expense list and displays on page
 function entireTotal() {
 	var expenses = get_expenses();
@@ -106,6 +113,7 @@ function filteredTotal() {
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " from  " +
 																													fromDate + " to " + toDate + " is</b>: $" + filteredTotal;
 		display(filteredExpenseList);
+		set_current_expenses(filteredExpenseList);
 	} else if (selected_category !== "" && (fromDate === "" || toDate === "")) {
 		console.log("Filter by category");
 		forEach(expenses, function(expense) {
@@ -118,6 +126,7 @@ function filteredTotal() {
 		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent on " + selected_category + " is</b>: $" + filteredTotal;
 		display(filteredExpenseList);
+		set_current_expenses(filteredExpenseList);
 	} else if (selected_category === "" && fromDate !== "" && toDate !== "") {
 		console.log("Filter by date");
 		forEach(expenses, function(expense) {
@@ -130,17 +139,22 @@ function filteredTotal() {
 		});
 		document.getElementById('displayTotal').innerHTML = "<b>Total spent from " + fromDate + " to " + toDate + " is</b>: $" + filteredTotal;
 		display(filteredExpenseList);
+		set_current_expenses(filteredExpenseList);
 	} else if (selected_category === "" && fromDate == "" && toDate == "") {
-		console.log("No filter criteria");
-		document.getElementById('displayTotal').innerHTML = "";
-		display(expenses);
-	}
+			console.log("No filter criteria");
+			var entireTotal = reduce(expenses, function(prev, curr) {
+				return {Cost: prev.Cost + curr.Cost};
+			})
+			document.getElementById('displayTotal').innerHTML = "<b>Total of all expenses is</b>: $" +  entireTotal.Cost;
+			display(expenses);
+			set_current_expenses(expenses);
+		}
 }
 
-
-// Sort function
+// Sort function that sorts expenses by criteria
 function sort(sortBy) {
-	var expenses = get_expenses();
+	var expenses = get_current_expenses();
+
 	if (sortBy === "sortByDate" && ascending === false) {
 		expenses.sort(function(a, b) {
 		return new Date(a.ExpenseDate) - new Date(b.ExpenseDate);
@@ -186,8 +200,7 @@ function sort(sortBy) {
 	display(expenses);
 }
 
-
-// Saves the expense list and writes it out to Parse
+// Function that saves the expense list and writes it out to Parse
 function saveToParse() {
 	var expenses = get_expenses();
 	var ExpenseList = Parse.Object.extend("ExpenseList");
@@ -205,14 +218,25 @@ function saveToParse() {
 	});
 }
 
+// Function to intially set the current expense list to entire expense list
+//  Aids in resetting the current expense list so when sorting expenses it does not
+//  retreive the existing sort list saved from previous session
+function set_initial_current_expenses() {
+	var expenses = get_expenses();
+	set_current_expenses(expenses);
+}
 
 // Event listeners for buttons on HTML page
 document.getElementById('add').addEventListener('click', add);
-document.getElementById('total_btn').addEventListener('click', entireTotal);
 document.getElementById('save').addEventListener('click', saveToParse);
 document.getElementById('filtered_total_btn').addEventListener('click', filteredTotal);
 
+// Initially set the current expense list to entire expense list
+set_initial_current_expenses();
 
-// Display expenses
+// Display expenses list
 display();
+
+
+
 
