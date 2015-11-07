@@ -26,7 +26,7 @@ function set_current_expenses(filteredList){
 // Adds an expense to the expense list (localStorage)
 function add() {
 	var expense = { Expense: document.getElementById('expense').value,
-		Cost: parseInt(document.getElementById('cost').value),
+		Cost: parseFloat(document.getElementById('cost').value),
 		Category: document.getElementById('category').value,
 		ExpenseDate: document.getElementById('expenseDate').value
 	};
